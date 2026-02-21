@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "234662528200",
+    "project_id": "vapedrop77",
+    "storage_bucket": "vapedrop77.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234662528200:android:ab0d394a53a7814f8051fd",
+        "android_client_info": {
+          "package_name": "org.enactussheffield.vapedrop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234662528200-jujluj78ivaekaukm1543ltea10784lu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAf9eJv_q0JCgX_s3uZzB9kQkqew6i-S78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234662528200-jujluj78ivaekaukm1543ltea10784lu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "234662528200-fa824bbntihulol9s3u02g37nhhu6vb6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.enactussheffield.vapedrop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

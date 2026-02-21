@@ -2,7 +2,6 @@
 
 https://rnfirebase.io/auth/social-auth
 https://react-native-google-signin.github.io/docs/install
-
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Firebase config
