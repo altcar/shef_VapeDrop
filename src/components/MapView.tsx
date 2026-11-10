@@ -100,7 +100,13 @@ export const MapView = ({
     map.easeTo({ center: [center.longitude, center.latitude], zoom, duration: 700 });
   }, [center.latitude, center.longitude, zoom, ready, route, selectedId]);
 
-  // Bin markers.
+  // Bin markers. The click handler is read from a ref so that a new callback
+  // identity from the parent does not tear down and rebuild every marker.
+  const onSelectRef = useRef(onSelectBin);
+  useEffect(() => {
+    onSelectRef.current = onSelectBin;
+  }, [onSelectBin]);
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready) return;
@@ -114,14 +120,14 @@ export const MapView = ({
       element.setAttribute("aria-label", bin.name);
       element.addEventListener("click", (event) => {
         event.stopPropagation();
-        onSelectBin?.(bin.id);
+        onSelectRef.current?.(bin.id);
       });
 
       return new maplibregl.Marker({ element, anchor: "center" })
         .setLngLat([bin.longitude, bin.latitude])
         .addTo(map);
     });
-  }, [bins, selectedId, ready, onSelectBin]);
+  }, [bins, selectedId, ready]);
 
   // "You are here" dot.
   useEffect(() => {

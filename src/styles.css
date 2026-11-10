@@ -108,11 +108,6 @@
     @apply relative flex h-3 w-3 items-center justify-center;
   }
 
-  .pulse-dot::before {
-    content: "";
-    @apply absolute inset-0 rounded-full bg-mint/60 animate-pulseRing;
-  }
-
   .pulse-dot::after {
     content: "";
     @apply relative h-2.5 w-2.5 rounded-full bg-mint ring-2 ring-ink;

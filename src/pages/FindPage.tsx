@@ -23,7 +23,6 @@ export const FindPage = () => {
   const [selectedId, setSelectedId] = useState<string | null>(binParam);
   const [routeTarget, setRouteTarget] = useState<BinWithDistance | null>(null);
   const [profile, setProfile] = useState<TravelProfile>("foot");
-  const [routeError, setRouteError] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -59,7 +58,6 @@ export const FindPage = () => {
   const openRoute = (bin: BinWithDistance) => {
     setSelectedId(bin.id);
     setRouteTarget(bin);
-    setRouteError(null);
     setParams({ bin: bin.id }, { replace: true });
   };
 
@@ -69,10 +67,6 @@ export const FindPage = () => {
     next.delete("bin");
     setParams(next, { replace: true });
   };
-
-  useEffect(() => {
-    if (error) setRouteError(error);
-  }, [error]);
 
   const selected = bins.find((bin) => bin.id === selectedId) ?? null;
 
@@ -198,7 +192,7 @@ export const FindPage = () => {
               bin={routeTarget}
               route={route}
               loading={routeLoading}
-              error={routeError}
+              error={error}
               from={position}
               profile={profile}
               onProfileChange={setProfile}

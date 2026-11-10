@@ -30,14 +30,9 @@ export default {
           "0%": { opacity: "0", transform: "translateY(12px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        pulseRing: {
-          "0%": { transform: "scale(0.8)", opacity: "0.7" },
-          "80%,100%": { transform: "scale(2.2)", opacity: "0" },
-        },
       },
       animation: {
         rise: "rise .45s cubic-bezier(.22,1,.36,1) both",
-        pulseRing: "pulseRing 2.4s ease-out infinite",
       },
     },
   },
