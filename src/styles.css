@@ -1,0 +1,201 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Geist";
+  src: url("/fonts/geist-sans.woff") format("woff");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GeistMono";
+  src: url("/fonts/geist-mono.woff") format("woff");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html,
+  body {
+    @apply m-0 min-h-full bg-ink text-white antialiased;
+  }
+
+  body {
+    @apply font-sans;
+    background-image:
+      radial-gradient(1100px 520px at 12% -10%, rgba(44, 224, 167, 0.16), transparent 62%),
+      radial-gradient(900px 480px at 108% 6%, rgba(199, 255, 61, 0.13), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply tracking-tight;
+  }
+
+  ::selection {
+    @apply bg-lime text-ink;
+  }
+
+  button,
+  a {
+    -webkit-user-drag: none;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-lime/70 ring-offset-2 ring-offset-ink;
+  }
+}
+
+@layer components {
+  .app-frame {
+    @apply relative mx-auto flex min-h-dvh w-full max-w-[540px] flex-col;
+  }
+
+  .card {
+    @apply rounded-3xl border border-line bg-surface/90 shadow-card backdrop-blur;
+  }
+
+  .card-tight {
+    @apply rounded-2xl border border-line bg-elevated/80;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border border-line bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/70;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold transition active:scale-[0.985] disabled:pointer-events-none disabled:opacity-45;
+  }
+
+  .btn-primary {
+    @apply btn bg-lime text-ink hover:bg-lime/90;
+  }
+
+  .btn-ghost {
+    @apply btn border border-line bg-white/5 text-white hover:bg-white/10;
+  }
+
+  .btn-quiet {
+    @apply btn bg-transparent text-white/70 hover:text-white;
+  }
+
+  .link {
+    @apply font-medium text-lime underline-offset-4 hover:underline;
+  }
+
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.16em] text-white/45;
+  }
+
+  .section-title {
+    @apply text-lg font-semibold text-white;
+  }
+
+  .pulse-dot {
+    @apply relative flex h-3 w-3 items-center justify-center;
+  }
+
+  .pulse-dot::before {
+    content: "";
+    @apply absolute inset-0 rounded-full bg-mint/60 animate-pulseRing;
+  }
+
+  .pulse-dot::after {
+    content: "";
+    @apply relative h-2.5 w-2.5 rounded-full bg-mint ring-2 ring-ink;
+  }
+}
+
+/* ---- boot screen (replaced as soon as React mounts) ---- */
+.boot {
+  @apply flex min-h-dvh flex-col items-center justify-center gap-3 text-sm text-white/50;
+}
+
+.boot-pin {
+  @apply block h-8 w-8 rounded-full border-2 border-lime/60 border-t-transparent;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- MapLibre chrome, restyled to match the app ---- */
+.maplibregl-map {
+  font-family: inherit;
+}
+
+.maplibregl-ctrl-attrib {
+  background: rgba(5, 11, 9, 0.72) !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-size: 10px !important;
+  border-radius: 10px 0 0 0;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.maplibregl-ctrl-group {
+  display: none;
+}
+
+/* custom bin markers */
+.bin-pin {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: #0c1613;
+  border: 1.5px solid rgba(199, 255, 61, 0.55);
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.95);
+  color: #c7ff3d;
+  transition: transform 0.18s ease, background 0.18s ease;
+  cursor: pointer;
+}
+
+.bin-pin.is-selected {
+  background: #c7ff3d;
+  color: #06110c;
+  transform: scale(1.12);
+  border-color: #c7ff3d;
+}
+
+.bin-pin svg {
+  width: 19px;
+  height: 19px;
+}
+
+.user-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #61c9ff;
+  border: 3px solid #06110c;
+  box-shadow: 0 0 0 4px rgba(97, 201, 255, 0.22);
+}
+
+/* thin scrollbars for the horizontal chip rows */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

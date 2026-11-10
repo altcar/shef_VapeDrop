@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Everything is public; there is nothing private to index here yet.
