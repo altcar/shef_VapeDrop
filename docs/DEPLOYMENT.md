@@ -12,7 +12,7 @@ The Worker serves two things from one deployment:
 2. **API routes** — `worker/index.ts` handles `/api/*` before assets are considered
    (`assets.run_worker_first: ["/api/*"]`).
 
-`/api/health`, `/api/locate` and `/api/route` all run on the same origin as the app, so there is no
+`/api/health` and `/api/route` all run on the same origin as the app, so there is no
 CORS and no second domain.
 
 ## Workers Builds (git-connected, auto deploy)
@@ -71,8 +71,8 @@ npm run dev      # Vite on :5173, proxies /api/* to :8787
 npm run worker   # wrangler dev on :8787 (the API worker + built assets)
 ```
 
-`wrangler dev` reads `.env.local` as local secrets, so `/api/locate` and routing work offline of any
-Cloudflare config.
+`wrangler dev` reads `.env.local` as local secrets, so the Worker (mostly routing) runs without any
+Cloudflare configuration.
 
 ## Environment variables
 

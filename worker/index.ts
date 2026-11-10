@@ -1,15 +1,18 @@
 /**
  * VapeDrop API Worker
  * -------------------
- * Serves three small endpoints next to the static SPA:
+ * Serves two small endpoints next to the static SPA:
  *
  *   GET /api/health  - liveness
- *   GET /api/locate  - coarse location from Cloudflare's request metadata
  *   GET /api/route   - walking/cycling/driving route via Valhalla (no API key)
  *
+ * Location is a client-side concern: the browser either shares GPS, or the app
+ * falls back to Sheffield Students' Union as the origin. IP geolocation was
+ * removed because city-level guesses produce confidently wrong walking times.
+ *
  * Why a Worker at all? Routing needs a same-origin proxy to add a proper
- * User-Agent, cache aggressively and keep the tile/routing providers off the
- * critical path when they are having a bad day.
+ * User-Agent, cache aggressively and keep the routing provider off the
+ * critical path when it is having a bad day.
  */
 
 interface Env {
@@ -18,14 +21,6 @@ interface Env {
 }
 
 type WaitUntil = (promise: Promise<unknown>) => void;
-
-type RequestCf = {
-  latitude?: string;
-  longitude?: string;
-  city?: string;
-  region?: string;
-  country?: string;
-};
 
 const VALHALLA_URL = "https://valhalla1.openstreetmap.de/route";
 const USER_AGENT = "VapeDrop/2.0 (+https://github.com/altcar/VapeDrop)";
@@ -174,25 +169,6 @@ const handleRoute = async (request: Request, waitUntil: WaitUntil): Promise<Resp
   return response;
 };
 
-const handleLocate = (request: Request): Response => {
-  const cf = (request as Request & { cf?: RequestCf }).cf;
-  const latitude = cf?.latitude ? Number(cf.latitude) : null;
-  const longitude = cf?.longitude ? Number(cf.longitude) : null;
-
-  if (latitude === null || longitude === null || Number.isNaN(latitude) || Number.isNaN(longitude)) {
-    return json({ latitude: null, longitude: null, city: null, country: null, source: "none" });
-  }
-
-  return json({
-    latitude,
-    longitude,
-    city: cf?.city ?? null,
-    region: cf?.region ?? null,
-    country: cf?.country ?? null,
-    source: "cloudflare",
-  });
-};
-
 export default {
   async fetch(request: Request, env: Env, ctx: { waitUntil: WaitUntil }): Promise<Response> {
     const url = new URL(request.url);
@@ -215,8 +191,6 @@ export default {
     switch (url.pathname) {
       case "/api/health":
         return json({ ok: true, service: "vapedrop", provider: env.ROUTING_PROVIDER ?? "valhalla" });
-      case "/api/locate":
-        return handleLocate(request);
       case "/api/route":
         return handleRoute(request, ctx.waitUntil.bind(ctx) as WaitUntil);
       default:

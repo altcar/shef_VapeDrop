@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { FALLBACK_ORIGIN } from "@/config/app";
 import { SELECTED_ZOOM, type TravelProfile } from "@/config/map";
 import { useAppData } from "@/hooks/useAppData";
 import { useRoute } from "@/hooks/useRoute";
@@ -10,12 +11,22 @@ import { RouteSheet } from "@/components/RouteSheet";
 import { Screen } from "@/components/Screen";
 import { TopBar } from "@/components/TopBar";
 import { SeedNotice } from "@/components/SeedNotice";
+import { LocationNotice } from "@/components/LocationNotice";
 import { BinCardSkeleton, EmptyState } from "@/components/Feedback";
 import { IconLocate, IconSearch, IconX } from "@/components/icons";
 
 export const FindPage = () => {
-  const { bins, binsLoading, binsSource, binsProblem, reloadBins, position, locationStatus, refreshLocation } =
-    useAppData();
+  const {
+    bins,
+    binsLoading,
+    binsSource,
+    binsProblem,
+    reloadBins,
+    position,
+    locationStatus,
+    locationSource,
+    refreshLocation,
+  } = useAppData();
   const [params, setParams] = useSearchParams();
   const binParam = params.get("bin");
 
@@ -83,7 +94,7 @@ export const FindPage = () => {
           zoom={selected ? SELECTED_ZOOM : 14}
           bins={filtered}
           selectedId={selectedId}
-          user={position}
+          user={locationSource === "gps" ? position : null}
           route={routeTarget ? route : null}
           onSelectBin={(id) => {
             const bin = bins.find((candidate) => candidate.id === id);
@@ -99,9 +110,11 @@ export const FindPage = () => {
           subtitle={
             locationStatus === "locating"
               ? "Locating you…"
-              : position
-                ? `${filtered.length} bin${filtered.length === 1 ? "" : "s"} nearby`
-                : "Showing bins"
+              : `${filtered.length} bin${filtered.length === 1 ? "" : "s"}${
+                  locationSource === "fallback"
+                    ? ` from ${FALLBACK_ORIGIN.shortLabel}`
+                    : " nearby"
+                }`
           }
           action={
             <button
@@ -143,6 +156,8 @@ export const FindPage = () => {
         {binsSource === "seed" && !binsLoading && (
           <SeedNotice problem={binsProblem} onRetry={reloadBins} />
         )}
+
+        <LocationNotice status={locationStatus} onRetry={refreshLocation} />
 
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-white">
@@ -195,6 +210,9 @@ export const FindPage = () => {
               error={error}
               from={position}
               profile={profile}
+              originLabel={
+                locationSource === "fallback" ? FALLBACK_ORIGIN.shortLabel : undefined
+              }
               onProfileChange={setProfile}
               onClose={closeRoute}
             />

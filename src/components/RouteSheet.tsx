@@ -14,6 +14,7 @@ export const RouteSheet = ({
   error,
   from,
   profile,
+  originLabel,
   onProfileChange,
   onClose,
 }: {
@@ -23,13 +24,16 @@ export const RouteSheet = ({
   error: string | null;
   from: LatLng | null;
   profile: TravelProfile;
+  originLabel?: string;
   onProfileChange: (profile: TravelProfile) => void;
   onClose: () => void;
 }) => (
   <section className="card animate-rise overflow-hidden">
     <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-3">
       <div className="min-w-0">
-        <p className="label">Your route</p>
+        <p className="label">
+          Your route{originLabel ? ` from ${originLabel}` : ""}
+        </p>
         <h2 className="truncate text-base font-semibold text-white">{bin.name}</h2>
       </div>
       <button type="button" onClick={onClose} className="btn-quiet -mr-2 px-2 py-1 text-xs">

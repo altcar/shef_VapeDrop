@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { PROGRAMME } from "@/config/app";
+import { FALLBACK_ORIGIN, NEARBY_RADIUS_M, PROGRAMME } from "@/config/app";
 import { POINTS_PER_VAPE, REWARDS_STATUS, pointsToVapes, tierFor } from "@/config/rewards";
 import { useAppData } from "@/hooks/useAppData";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,6 +10,7 @@ import { TopBar } from "@/components/TopBar";
 import { UserAvatar } from "@/components/UserAvatar";
 import { StatusChip } from "@/components/StatusChip";
 import { SeedNotice } from "@/components/SeedNotice";
+import { LocationNotice } from "@/components/LocationNotice";
 import { DepositRowMini } from "@/components/DepositRow";
 import { Skeleton } from "@/components/Feedback";
 import {
@@ -38,7 +39,16 @@ const firstName = (value: string | null | undefined): string | null => {
 
 export const HomePage = () => {
   const { user, profile, points, loading: authLoading } = useAuth();
-  const { bins, binsSource, binsProblem, binsLoading, reloadBins, locationStatus } = useAppData();
+  const {
+    bins,
+    binsSource,
+    binsProblem,
+    binsLoading,
+    reloadBins,
+    locationStatus,
+    locationSource,
+    refreshLocation,
+  } = useAppData();
   const { deposits } = useDeposits(user?.uid ?? null, 5);
 
   const nearest = bins[0] ?? null;
@@ -64,7 +74,8 @@ export const HomePage = () => {
   const greeting = `${greetingFor(now.getHours())}${name ? `, ${name}` : ""}`;
 
   const vapesRecycled = points > 0 ? pointsToVapes(points) : deposits.length;
-  const nearbyCount = bins.filter((bin) => bin.distanceMeters <= 2500).length;
+  const nearbyCount = bins.filter((bin) => bin.distanceMeters <= NEARBY_RADIUS_M).length;
+  const usingFallbackOrigin = locationSource === "fallback" && locationStatus !== "locating";
 
   return (
     <Screen>
@@ -74,6 +85,8 @@ export const HomePage = () => {
         {binsSource === "seed" && !binsLoading && (
           <SeedNotice problem={binsProblem} onRetry={reloadBins} />
         )}
+
+        <LocationNotice status={locationStatus} onRetry={refreshLocation} />
 
         {/* Nearest bin + route */}
         <section className="card relative overflow-hidden p-4">
@@ -104,8 +117,10 @@ export const HomePage = () => {
                       <IconClock size={12} />
                       {formatDuration(nearest.walkSeconds)} walk
                     </span>
-                    {locationStatus === "denied" && (
-                      <span className="chip border-clay/30 text-clay">approx. location</span>
+                    {usingFallbackOrigin && (
+                      <span className="chip border-sky/30 text-sky">
+                        from {FALLBACK_ORIGIN.shortLabel}
+                      </span>
                     )}
                   </div>
                 </>

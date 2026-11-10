@@ -12,10 +12,18 @@
 export const APP_NAME = "VapeDrop";
 export const APP_TAGLINE = "Recycle your vape. Not your planet.";
 
-/** Where the map should point before we know where the user is (Bristol). */
-export const FALLBACK_CENTER = {
-  latitude: 53.380795,
-  longitude: -1.484205,
+/**
+ * The origin we use when the device will not share a location.
+ *
+ * Sheffield Students' Union is the anchor for the pilot: if someone has location
+ * sharing off we measure every distance and draw every route from here, and the
+ * UI says so rather than pretending we know where they are.
+ */
+export const FALLBACK_ORIGIN = {
+  latitude: 53.38157,
+  longitude: -1.48936,
+  label: "Sheffield Students' Union",
+  shortLabel: "the Students' Union",
 };
 
 /** Average walking speed, metres per second (used for the walk-time estimate). */

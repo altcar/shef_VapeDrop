@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { FALLBACK_CENTER } from "@/config/app";
+import { FALLBACK_ORIGIN } from "@/config/app";
 import type { LatLng } from "@/lib/types";
 
-export type LocationSource = "gps" | "network" | "default";
+export type LocationSource = "gps" | "fallback";
 export type LocationStatus = "locating" | "ready" | "denied" | "unsupported";
 
 interface GeolocationState {
@@ -13,23 +13,27 @@ interface GeolocationState {
   error: string | null;
 }
 
-interface IpLocation {
-  latitude?: number;
-  longitude?: number;
-  city?: string | null;
-}
+/** Every distance and route is measured from here when GPS is unavailable. */
+const fallbackPosition: LatLng = {
+  latitude: FALLBACK_ORIGIN.latitude,
+  longitude: FALLBACK_ORIGIN.longitude,
+};
 
 const initialState: GeolocationState = {
-  position: FALLBACK_CENTER,
+  position: fallbackPosition,
   accuracy: null,
-  source: "default",
+  source: "fallback",
   status: "locating",
   error: null,
 };
 
 /**
- * Browser GPS first, then a Cloudflare-derived approximate location, then the
- * Bristol/Sheffield-ish fallback from config (the map always renders).
+ * Browser GPS, or Sheffield Students' Union.
+ *
+ * Deliberately no IP geolocation in between: city-level IP lookups are often
+ * tens of kilometres out, which produces confidently wrong walking times. The
+ * Union is a known, stable anchor, and the UI tells the user that is where the
+ * distances start from.
  */
 export const useGeolocation = () => {
   const [state, setState] = useState<GeolocationState>(initialState);
@@ -37,34 +41,18 @@ export const useGeolocation = () => {
   const locate = useCallback(async () => {
     setState((current) => ({ ...current, status: "locating", error: null }));
 
-    const fallbackToNetwork = async (reason: string) => {
-      try {
-        const response = await fetch("/api/locate");
-        if (!response.ok) throw new Error(`locate failed (${response.status})`);
-        const data = (await response.json()) as IpLocation;
-        if (typeof data.latitude === "number" && typeof data.longitude === "number") {
-          setState({
-            position: { latitude: data.latitude, longitude: data.longitude },
-            accuracy: 5000,
-            source: "network",
-            status: "ready",
-            error: null,
-          });
-          return;
-        }
-        throw new Error("no coordinates in response");
-      } catch {
-        setState((current) => ({
-          ...current,
-          status: current.source === "default" ? "denied" : "ready",
-          error: reason,
-        }));
-      }
+    const useFallback = (status: LocationStatus, error: string | null) => {
+      setState({
+        position: fallbackPosition,
+        accuracy: null,
+        source: "fallback",
+        status,
+        error,
+      });
     };
 
     if (typeof navigator === "undefined" || !("geolocation" in navigator)) {
-      await fallbackToNetwork("This browser cannot share your location.");
-      setState((current) => ({ ...current, status: "unsupported" }));
+      useFallback("unsupported", "This browser cannot share your location.");
       return;
     }
 
@@ -82,7 +70,11 @@ export const useGeolocation = () => {
         });
       },
       (geoError) => {
-        void fallbackToNetwork(geoError.message || "Location permission was declined.");
+        const message =
+          geoError.code === geoError.PERMISSION_DENIED
+            ? "Location permission was declined."
+            : geoError.message || "Could not get your location.";
+        useFallback("denied", message);
       },
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 60_000 },
     );

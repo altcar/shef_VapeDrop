@@ -8,6 +8,8 @@ disposable vapes out of the bin.
 - Web app: React + Vite SPA on **Cloudflare Workers** (Workers Static Assets + one small API Worker)
 - Map: **MapLibre GL + OpenFreeMap** tiles — no Google Maps key, no monthly bill
 - Routing: **Valhalla** (OSM) walking/cycling/driving directions, proxied and cached by the Worker
+- Location: browser GPS; if the device refuses, every distance and route is measured from
+  **Sheffield Students' Union** and the UI says so
 - Accounts & history: Firebase Auth + Firestore (optional — the app runs in demo mode without it)
 - Auto deploy: **Workers Builds**, git-connected to `main`, build `npm ci && npm run build`,
   deploy `npx wrangler deploy`, Wrangler pinned to `4.160.0`
@@ -26,7 +28,7 @@ disposable vapes out of the bin.
 | Next.js app on Vercel (`vape-drop.vercel.app`, deployment paused) | Static SPA + Worker on `vapedrop.hheylau.workers.dev` |
 | Google Maps JS API + Directions + Distance Matrix (billed, key required) | MapLibre + OpenFreeMap tiles, Valhalla routing (no key) |
 | `/api/distance` needed a server key | Distance/walk time computed in the browser; routes cached at the edge |
-| `/api/geolocation` proxied ipinfo.io with a token | `/api/locate` reads Cloudflare's `request.cf` geo — no token |
+| `/api/geolocation` proxied ipinfo.io with a token | No IP geolocation at all — GPS, or Sheffield Students' Union as the origin |
 | Mixed Expo + Next.js in one root | Web app at the root, Expo app moved to [`mobile/`](mobile/) |
 | Hard-coded "Power 10" and a fake reward screen | Points/rewards driven by config with explicit "pending" states |
 
@@ -42,7 +44,7 @@ disposable vapes out of the bin.
 │   ├── components/          # MapView (MapLibre), BinCard, RouteSheet, nav, icons…
 │   ├── pages/               # Home, Find, Recycle, Rewards, Account, History
 │   └── styles.css           # Tailwind + design tokens
-├── worker/index.ts          # /api/health, /api/locate, /api/route
+├── worker/index.ts          # /api/health, /api/route
 ├── wrangler.jsonc           # Worker + static assets config
 ├── docs/                    # deployment, map provider, rewards/decisions
 └── mobile/                  # legacy Expo app (kept, not built by CI)

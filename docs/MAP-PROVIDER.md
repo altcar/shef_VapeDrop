@@ -11,7 +11,7 @@ and how to swap a piece out later.
 | Basemap | Maps JavaScript API | **MapLibre GL JS + OpenFreeMap** vector tiles | No | Free, no quota |
 | Walking route | Directions API | **Valhalla** (FOSSGIS public instance) via `/api/route` | No | Free, fair use |
 | Distance + time | Distance Matrix API | Haversine + walking speed in the browser (`src/lib/geo.ts`) | No | Free |
-| IP location | ipinfo.io | Cloudflare `request.cf` in `/api/locate` | No | Free |
+| IP location | ipinfo.io | Dropped — city-level guesses distort walking times; origin falls back to Sheffield SU | No | Free |
 
 Monthly cost of the map stack: **£0**, with no API key to leak and no billing account to protect.
 
