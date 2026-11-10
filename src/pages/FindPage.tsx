@@ -102,7 +102,7 @@ export const FindPage = () => {
           }}
         />
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink via-ink/70 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink via-ink/85 to-transparent" />
 
         <TopBar
           floating
