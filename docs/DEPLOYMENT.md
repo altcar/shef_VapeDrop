@@ -64,6 +64,19 @@ npx wrangler rollback            # previous version
 npx wrangler tail                # live logs
 ```
 
+### Triggering a build by hand
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $CF_API_TOKEN" -H "content-type: application/json" \
+  "https://api.cloudflare.com/client/v4/accounts/<account_id>/builds/triggers/<trigger_uuid>/builds" \
+  -d '{"commit_hash":"<full 40-character sha>"}'
+```
+
+Use the **full** SHA (from `git rev-parse HEAD`). A short SHA is accepted by the API but the clone
+step then fails with `error occurred while fetching repository`, which looks like a GitHub problem
+and is not one.
+
 ## Local development
 
 ```bash
