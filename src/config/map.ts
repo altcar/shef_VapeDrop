@@ -18,7 +18,7 @@ export const MAP_ATTRIBUTION =
   '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">© OpenStreetMap</a>';
 
 export const DEFAULT_ZOOM = 14;
-export const SELECTED_ZOOM = 16.2;
+export const SELECTED_ZOOM = 15.4;
 
 export type TravelProfile = "foot" | "bike" | "car";
 
