@@ -11,7 +11,7 @@
  */
 
 export const MAP_STYLE_URL =
-  import.meta.env.VITE_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/dark";
+  import.meta.env.VITE_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/bright";
 
 export const MAP_ATTRIBUTION =
   '<a href="https://openfreemap.org" target="_blank" rel="noreferrer">OpenFreeMap</a> · ' +

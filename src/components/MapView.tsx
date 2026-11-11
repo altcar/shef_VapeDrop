@@ -269,19 +269,21 @@ export const MapView = ({
       source.setData(data);
     } else {
       map.addSource("route", { type: "geojson", data });
+      // Light basemap: a white casing plus a deep mint line reads like a
+      // navigation route without fighting the map colours.
       map.addLayer({
         id: "route-casing",
         type: "line",
         source: "route",
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#04130d", "line-width": 9, "line-opacity": 0.85 },
+        paint: { "line-color": "#FFFFFF", "line-width": 10, "line-opacity": 0.95 },
       });
       map.addLayer({
         id: "route-line",
         type: "line",
         source: "route",
         layout: { "line-cap": "round", "line-join": "round" },
-        paint: { "line-color": "#C7FF3D", "line-width": 5 },
+        paint: { "line-color": "#0B8A62", "line-width": 5.5 },
       });
     }
 
@@ -307,7 +309,7 @@ export const MapView = ({
 
   return (
     <div
-      className={`relative isolate overflow-hidden bg-surface ${className}`}
+      className={`relative isolate overflow-hidden bg-[#e9e7df] ${className}`}
       role="region"
       aria-label="Map of collection bins"
     >
@@ -320,24 +322,28 @@ export const MapView = ({
       <div ref={containerRef} className="h-full w-full" />
 
       {status === "loading" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-surface/90 text-center">
-          <p className="text-xs text-white/45">Loading map…</p>
-          <p className="text-[10px] text-white/30">Every bin is listed below already.</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-[#e9e7df]/95 text-center">
+          <p className="text-xs text-[#5f6368]">Loading map…</p>
+          <p className="text-[10px] text-[#80868b]">Every bin is listed below already.</p>
         </div>
       )}
 
       {status === "error" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-surface/95 px-6 text-center">
-          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-clay/10 text-clay">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#e9e7df]/95 px-6 text-center">
+          <span className="grid h-11 w-11 place-items-center rounded-2xl bg-[#d93025]/10 text-[#c5221f]">
             <IconAlert size={20} />
           </span>
-          <p className="text-sm font-semibold text-white">The map did not load</p>
-          <p className="max-w-[32ch] text-[11px] leading-relaxed text-white/50">
+          <p className="text-sm font-semibold text-[#202124]">The map did not load</p>
+          <p className="max-w-[32ch] text-[11px] leading-relaxed text-[#5f6368]">
             {problem ?? "The basemap could not be reached."} Every bin is still listed below, with
             distances and walking routes.
           </p>
           <div className="mt-1 flex gap-2">
-            <button type="button" onClick={retry} className="btn-ghost px-3 py-1.5 text-[11px]">
+            <button
+              type="button"
+              onClick={retry}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#dadce0] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#202124] shadow-sm transition hover:bg-[#f8f9fa]"
+            >
               <IconMapPin size={13} />
               Try again
             </button>

@@ -126,13 +126,13 @@ export const FindPage = () => {
         />
 
         <div className="absolute inset-x-4 bottom-4 z-20">
-          <div className="flex items-center gap-2 rounded-2xl border border-line bg-ink/85 px-3 py-2 backdrop-blur-xl">
-            <IconSearch size={16} className="text-white/40" />
+          <div className="flex items-center gap-2 rounded-full border border-black/5 bg-white px-4 py-2.5 shadow-[0_10px_24px_-12px_rgba(0,0,0,0.45)]">
+            <IconSearch size={16} className="text-[#5f6368]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search a bin, street or campus"
-              className="w-full bg-transparent text-[13px] text-white placeholder:text-white/35 focus:outline-none"
+              className="w-full bg-transparent text-[13px] text-[#202124] placeholder:text-[#80868b] focus:outline-none"
               aria-label="Search bins"
             />
             {query && (
@@ -140,7 +140,7 @@ export const FindPage = () => {
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Clear search"
-                className="text-white/40 hover:text-white"
+                className="text-[#5f6368] hover:text-[#202124]"
               >
                 <IconX size={15} />
               </button>

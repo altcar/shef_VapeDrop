@@ -8,7 +8,7 @@ and how to swap a piece out later.
 
 | Need | Old (Google) | New | Key? | Cost |
 | --- | --- | --- | --- | --- |
-| Basemap | Maps JavaScript API | **MapLibre GL JS + OpenFreeMap** vector tiles | No | Free, no quota |
+| Basemap | Maps JavaScript API | **MapLibre GL JS + OpenFreeMap** vector tiles (style: `bright`) | No | Free, no quota |
 | Walking route | Directions API | **Valhalla** (FOSSGIS public instance) via `/api/route` | No | Free, fair use |
 | Distance + time | Distance Matrix API | Haversine + walking speed in the browser (`src/lib/geo.ts`) | No | Free |
 | IP location | ipinfo.io | Dropped — city-level guesses distort walking times; origin falls back to Sheffield SU | No | Free |
@@ -27,8 +27,11 @@ Monthly cost of the map stack: **£0**, with no API key to leak and no billing a
 | OpenFreeMap | **Unlimited, no key, no account** | Chosen for the basemap |
 | Protomaps + R2 | Storage cost only | Best long-term option if we ever need full control; more setup than needed today |
 
-OpenFreeMap is a plain style URL (`https://tiles.openfreemap.org/styles/dark`), which means it can be
-swapped with one environment variable (`VITE_MAP_STYLE_URL`) and no code change.
+OpenFreeMap is a plain style URL. We ship `bright` (a light, colourful, Google-Maps-like
+basemap); `liberty`, `positron` and `dark` are tested drop-in alternatives. Switching is one
+environment variable (`VITE_MAP_STYLE_URL`), no code change. The map chrome (pins, route casing,
+attribution) is tuned for a light basemap — see `src/styles.css` and `MapView.tsx` if you go dark
+again.
 
 ## Routing options
 
