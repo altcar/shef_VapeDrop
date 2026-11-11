@@ -83,9 +83,32 @@ export const FindPage = () => {
 
   return (
     <Screen>
+      <TopBar
+        title="Find a bin"
+        subtitle={
+          locationStatus === "locating"
+            ? "Locating you…"
+            : `${filtered.length} bin${filtered.length === 1 ? "" : "s"}${
+                locationSource === "fallback"
+                  ? ` from ${FALLBACK_ORIGIN.shortLabel}`
+                  : " nearby"
+              }`
+        }
+        action={
+          <button
+            type="button"
+            onClick={refreshLocation}
+            aria-label="Recentre on my location"
+            className="grid h-10 w-10 place-items-center rounded-full border border-line bg-white/5 text-white/75 transition hover:text-white"
+          >
+            <IconLocate size={18} />
+          </button>
+        }
+      />
+
       <div className="relative">
         <MapView
-          className="h-[48vh] min-h-[310px] w-full border-b border-line"
+          className="h-[46vh] min-h-[300px] w-full border-b border-line"
           center={
             selected
               ? { latitude: selected.latitude, longitude: selected.longitude }
@@ -100,32 +123,6 @@ export const FindPage = () => {
             const bin = bins.find((candidate) => candidate.id === id);
             if (bin) openRoute(bin);
           }}
-        />
-
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-ink via-ink/85 to-transparent" />
-
-        <TopBar
-          floating
-          title="Find a bin"
-          subtitle={
-            locationStatus === "locating"
-              ? "Locating you…"
-              : `${filtered.length} bin${filtered.length === 1 ? "" : "s"}${
-                  locationSource === "fallback"
-                    ? ` from ${FALLBACK_ORIGIN.shortLabel}`
-                    : " nearby"
-                }`
-          }
-          action={
-            <button
-              type="button"
-              onClick={refreshLocation}
-              aria-label="Recentre on my location"
-              className="grid h-10 w-10 place-items-center rounded-full border border-line bg-ink/70 text-white/75 backdrop-blur transition hover:text-white"
-            >
-              <IconLocate size={18} />
-            </button>
-          }
         />
 
         <div className="absolute inset-x-4 bottom-4 z-20">
